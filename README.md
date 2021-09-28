@@ -171,7 +171,7 @@ Query your CAC with opensc-tools again and see if it detects the drivers.
 
 Now we can start working on the certificates and preparing the browers to use your CAC.
 
-### Browsers
+## Browser Configuration
 
 I will show instructions on how to prepare both FireFox and Microsoft Edge (Chromium) on PopOS!
 
