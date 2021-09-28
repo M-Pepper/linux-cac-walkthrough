@@ -11,6 +11,7 @@ Notes on using a CAC/PIV for PopOS!
     libpcsc-perl
     libpcsclite1
     pcscd
+    vsmartcard-vpcd
 
 
 ### Software
@@ -29,7 +30,7 @@ The latest version of OpenSC on the Debian repositories is v0.21. I personally h
 
 The following command will get you up and running as far as dependencies go:
 
-    sudo apt update -y && sudo apt upgrade -y && sudo apt install pcsc-tools libccid libpcsc-perl libpcsclite1 pcscd opensc opensc-pkcs11 -y
+    sudo apt update -y && sudo apt upgrade -y && sudo apt install pcsc-tools libccid libpcsc-perl libpcsclite1 pcscd opensc opensc-pkcs11 vsmartcard-vpcd -y
 
 ### Checks
 
