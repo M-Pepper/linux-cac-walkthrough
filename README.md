@@ -130,6 +130,10 @@ If you get different output first check if the daemon is actually running:
 If there are errors restart the daemon:
 
     sudo systemctl restart pcscd.socket && sudo systemctl restart pcscd.service
+    
+Lastly the following command will unload the kernel modules and allow whatever is plugged into the usb slot to claim it. This is generally only useful if you get the following message from the `pcsc_scan`: "scanning present readers waiting for the first reader..."
+
+	modprobe -r pn533 nfc
 
 Now that the middleware is operational we can pivot to unlocking and interacting with our CAC. First use `opensc-tools` to query some information about your CAC; the following command will list driver information available to OpenSC and if OpenSC can interact with the middleware. **This is important and probably the largest stumbling block!**:
 
