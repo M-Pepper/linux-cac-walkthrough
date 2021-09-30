@@ -207,7 +207,9 @@ If you installed your OpenSC from source then the path to your `onepin-opensc-pk
 
 If you need to manually add the security device do the following:
 
-    Navigate to Edit -> Preference -> Advanced -> Certificates -> Security Devices. You should see the following entry under modules and devices: and click "Load" to load a module using `/usr/lib/x86_64-linux-gnu/pkcs11/onepin-opensc-pkcs11.so` or `/usr/lib/onepin-opensc-pkcs11.so`.
+    Navigate to Edit -> Preference -> Advanced -> Certificates -> Security Devices. 
+    You should see the following entry under modules and devices: and click "Load" to load a module using 
+    `/usr/lib/x86_64-linux-gnu/pkcs11/onepin-opensc-pkcs11.so` or `/usr/lib/onepin-opensc-pkcs11.so`.
 
 ##### Import DoD Certificates
 
@@ -267,7 +269,8 @@ Now you must add the DoD Certificates to nssdb. Navigate to the location of the 
 
 Or the manual way:
 
-    Re-open Chrome, Navigate to Settings -> Show Advanced Settings -> Manage Certificates -> Authorities to load CA bundle from the PEM-formatted file from above.
+    Re-open Chrome, Navigate to Settings -> Show Advanced Settings 
+    -> Manage Certificates -> Authorities to load CA bundle from the PEM-formatted file from above.
 
 Verify the authority is in Chrome under Settings -> Show Advanced Settings -> Manage Certificates -> Authorities then expand "org-U.S. Government" and you should see a number of "DoD" certificates listed.
 
