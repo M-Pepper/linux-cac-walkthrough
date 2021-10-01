@@ -133,7 +133,7 @@ If there are errors restart the daemon:
 
     sudo systemctl restart pcscd.socket && sudo systemctl restart pcscd.service
     
-Lastly the following command will unload the kernel modules and allow whatever is plugged into the usb slot to claim it. This is generally only useful if you get the following message from the `pcsc_scan`: "scanning present readers waiting for the first reader..."
+The last trouble shooting tip is to execute the following command; this will unload the kernel modules and allow whatever is plugged into the usb slot to claim the usb slot. This is generally only useful if you get the following message from the `pcsc_scan`: "scanning present readers waiting for the first reader..."
 
 	modprobe -r pn533 nfc
 
