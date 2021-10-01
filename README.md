@@ -263,6 +263,10 @@ If OpenSC is not registered in NSS DB then you need to manually add it with the 
 
 Query the database again and see if it's added.
 
+You must not have any other residual nssdb entries from cackey, coolkey, or old versions of opensc. NSS Internal and OpenSC Framework should be the only entries. Remove other entries with the following command:
+
+    modutil -dbdir sql:$HOME/.pki/nssdb/ -delete "Name of Module (Probably CAC Module since everyone follows the milcac tutorial)"
+
 ##### Import DoD Certificates
 
 Now you must add the DoD Certificates to nssdb. Navigate to the location of the unziped DoD Certificates and install via the following command:
