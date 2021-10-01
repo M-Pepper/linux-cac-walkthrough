@@ -22,13 +22,15 @@ Notes on using a CAC/PIV for PopOS!
 
 ### Rundown
 
-Some important setup information. Most guides will direct your towards CoolKey or CACKey as the pkcs11 management software to interact with your CAC. CoolKey used to be very effective but it cannot interact with the PIV certificates on your CAC; CACKey has the distinguishment of only being available to download after already being authenticated via CAC… also it’s just not very good. This leaves us with OpenSC. OpenSC is the bee’s knees, it can interact with PIV certificates, is very actively updated, RedHat provides upstream commits, and is very fast!
+Some important setup information. Most guides will direct your towards CoolKey or CACKey as the pkcs11 management software to interact with your CAC. CoolKey used to be very effective but it cannot interact with the PIV certificates on your CAC; CACKey has the distinguishment of only being available to download after already being authenticated via CAC… also it’s just not very good. This leaves us with OpenSC. OpenSC is the bee’s knees, it can interact with PIV certificates, is very actively updated, RedHat provides upstream commits, and is very fast! CACKey and CoolKey must be completely uninstalled.
 
 The latest version of OpenSC on the Debian repositories is v0.21. I personally have had trouble with this version so I built and installed v0.22 from source from their github page. You can follow those instructions at the following link: https://github.com/OpenSC/OpenSC/wiki/Compiling-and-Installing-on-Unix-flavors
 
 **This should be a later attempt at trouble shooting unless you enjoy building from source**
 
 The following command will get you up and running as far as dependencies go:
+
+    sudo apt remove cackey coolkey libckyapplet1 libckyapplet1-dev -y && sudo apt purge -y 
 
     sudo apt update -y && sudo apt upgrade -y && sudo apt install pcsc-tools libccid libpcsc-perl libpcsclite1 pcscd opensc opensc-pkcs11 vsmartcard-vpcd -y
 
