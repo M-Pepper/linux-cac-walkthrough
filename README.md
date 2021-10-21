@@ -188,9 +188,9 @@ Download the DoD certificates and unzip them:
 https://public.cyber.mil/pki-pke/pkipke-document-library/
 
 This command will obviously have to be updated as Cyber.mil continuously releases new bundles and moves them around on their website:
-
+```bash
     wget https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip && unzip certificates+pkcs7_DoD.zip
-
+```
 
 #### FireFox
 
@@ -239,9 +239,9 @@ Firefox is now ready to use.
 ##### Add the CAC Module to NSS DB
 
 Query nssdb to see if the OpenSC framework was registered in the NSS DB by using `pkcs11-register`
-
+```bash
     modutil -dbdir sql:$HOME/.pki/nssdb/ -list
-
+```
 You should see an entry similar to the following:
 ```
     Listing of PKCS #11 Modules
