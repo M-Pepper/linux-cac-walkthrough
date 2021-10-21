@@ -39,7 +39,7 @@ The following command will get you up and running as far as dependencies go:
 Now that all your dependencies are installed it’s time to start checking if things are operating how they should. The first step is to ensure your middleware actually sees your CAC; this is done via pcscd and it’s associated tools.
 
 Running pcsc_scan should give the following output:
-
+```bash
     pcsc_scan
     Using reader plug'n play mechanism
     Scanning present readers...
@@ -89,10 +89,10 @@ Running pcsc_scan should give the following output:
     Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
     3B DB 96 00 80 1F 03 00 31 C0 64 B0 F3 10 00 07 90 00 80
         DoD CAC, Oberthur ID One 128 v5.5 Dual
-
+```
 
 If you get different output first check if the daemon is actually running:
-
+```bash
     sudo systemctl status pcscd.s*
 
     ● pcscd.service - PC/SC Smart Card Daemon
@@ -127,7 +127,7 @@ If you get different output first check if the daemon is actually running:
         CGroup: /system.slice/pcscd.socket
 
     Sep 26 20:37:12 pop-os systemd[1]: Listening on PC/SC Smart Card Daemon Activation Socket.
-
+```
 
 If there are errors restart the daemon:
 
@@ -138,7 +138,7 @@ The last trouble shooting tip is to execute the following command; this will unl
 	modprobe -r pn533 nfc
 
 Now that the middleware is operational we can pivot to unlocking and interacting with our CAC. First use `opensc-tools` to query some information about your CAC; the following command will list driver information available to OpenSC and if OpenSC can interact with the middleware. **This is important and probably the largest stumbling block!**:
-
+```bash
     opensc-tool -l
     # Detected readers (pcsc)
     Nr.  Card  Features  Name
@@ -150,7 +150,7 @@ Now that the middleware is operational we can pivot to unlocking and interacting
     opensc-tool -D
     Available card drivers:
     cac              Common Access Card (CAC)
-
+```
 If your CAC reader is not listed under `Detected readers (pcsc)` there is a problem between OpenSC and pcscd. I do not know of any trouble shooting steps for a problem here except reading the source and reinstalling.
 
 If you do not see the cac drivers under `Available card drivers` then we need to force OpenSC to use them. I've found that OpenSC on PopOS generally has this problem but thankfully it's super easy to fix.
@@ -241,7 +241,7 @@ Query nssdb to see if the OpenSC framework was registered in the NSS DB by using
     modutil -dbdir sql:$HOME/.pki/nssdb/ -list
 
 You should see an entry similar to the following:
-
+```bash
     Listing of PKCS #11 Modules
     -----------------------------------------------------------
     1. NSS Internal PKCS #11 Module
@@ -253,7 +253,7 @@ You should see an entry similar to the following:
     2. OpenSC smartcard framework (0.22)
 	library name: /usr/lib/onepin-opensc-pkcs11.so
 	   uri: pkcs11:library-manufacturer=OpenSC%20Project;library-description=OpenSC%20smartcard%20framework;library-version=0.22
-
+```
 
 
 If OpenSC is not registered in NSS DB then you need to manually add it with the following command. ***It is very important you close all browsers before registering with the database***. Change the 'x' to match your version number and the libfile to match your `onepin-opensc-pkcs11.so` installation directory:
