@@ -41,7 +41,7 @@ Now that all your dependencies are installed it’s time to start checking if th
 Running pcsc_scan should give the following output:
 ```bash
     pcsc_scan
-    Using reader plug'n play mechanism
+    Using reader plug n play mechanism
     Scanning present readers...
     0: Virtual PCD 00 00
     1: Virtual PCD 00 01
@@ -130,9 +130,9 @@ If you get different output first check if the daemon is actually running:
 ```
 
 If there are errors restart the daemon:
-
+```bash
     sudo systemctl restart pcscd.socket && sudo systemctl restart pcscd.service
-    
+```    
 The last trouble shooting tip is to execute the following command; this will unload the kernel modules and allow whatever is plugged into the usb slot to claim the usb slot. This is generally only useful if you get the following message from the `pcsc_scan`: "scanning present readers waiting for the first reader..."
 
 	modprobe -r pn533 nfc
@@ -162,6 +162,7 @@ Edit `/etc/opensc/opensc.conf` and add the following lines:
 
 So your `opensc.conf` should look like this:
 
+```bash
     cat opensc.conf
     app default {
         # debug = 3;
@@ -172,6 +173,7 @@ So your `opensc.conf` should look like this:
         # use_file_caching = true;
         }
     }
+```
 
 Query your CAC with opensc-tools again and see if it detects the drivers.
 
@@ -197,9 +199,9 @@ This command will obviously have to be updated as Cyber.mil continuously release
 Load the proper security device on FireFox:
 
 There are two ways to register the security device with Firefox, a manual and automatic way. I recommend the automatic way:
-
+```bash
     pkcs11-register
-
+```
 Navigate to Edit -> Preference -> Advanced -> Certificates -> Security Devices. You should see the following entry under modules and devices:
 
 ![pic](firefox-security.png)
@@ -241,7 +243,7 @@ Query nssdb to see if the OpenSC framework was registered in the NSS DB by using
     modutil -dbdir sql:$HOME/.pki/nssdb/ -list
 
 You should see an entry similar to the following:
-```bash
+```
     Listing of PKCS #11 Modules
     -----------------------------------------------------------
     1. NSS Internal PKCS #11 Module
@@ -257,22 +259,22 @@ You should see an entry similar to the following:
 
 
 If OpenSC is not registered in NSS DB then you need to manually add it with the following command. ***It is very important you close all browsers before registering with the database***. Change the 'x' to match your version number and the libfile to match your `onepin-opensc-pkcs11.so` installation directory:
-
+```bash
     modutil -dbdir sql:$HOME/.pki/nssdb/ -add "OpenSC smartcard framework (0.2x)" -libfile /usr/lib/onepin-opensc-pkcs11.so
-
+```
 
 Query the database again and see if it's added.
 
 You must not have any other residual nssdb entries from cackey, coolkey, or old versions of opensc. NSS Internal and OpenSC Framework should be the only entries. Remove other entries with the following command:
-
+```bash
     modutil -dbdir sql:$HOME/.pki/nssdb/ -delete "Name of Module (Probably CAC Module since everyone follows the milcac tutorial)"
-
+```
 ##### Import DoD Certificates
 
 Now you must add the DoD Certificates to nssdb. Navigate to the location of the unziped DoD Certificates and install via the following command:
-
+```bash
     for n in *.p7b; do certutil -d sql:$HOME/.pki/nssdb -A -t TC -n $n -i $n; done
-
+```
 Or the manual way:
 
     Re-open Chrome, Navigate to Settings -> Show Advanced Settings 
