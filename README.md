@@ -29,11 +29,11 @@ The latest version of OpenSC on the Debian repositories is v0.21. I personally h
 **This should be a later attempt at trouble shooting unless you enjoy building from source**
 
 The following command will get you up and running as far as dependencies go:
-
+```bash
     sudo apt remove cackey coolkey libckyapplet1 libckyapplet1-dev -y && sudo apt purge -y 
 
     sudo apt update -y && sudo apt upgrade -y && sudo apt install pcsc-tools libccid libpcsc-perl libpcsclite1 pcscd opensc opensc-pkcs11 vsmartcard-vpcd -y
-
+```
 ### Checks
 
 Now that all your dependencies are installed it’s time to start checking if things are operating how they should. The first step is to ensure your middleware actually sees your CAC; this is done via pcscd and it’s associated tools.
@@ -134,9 +134,9 @@ If there are errors restart the daemon:
     sudo systemctl restart pcscd.socket && sudo systemctl restart pcscd.service
 ```    
 The last trouble shooting tip is to execute the following command; this will unload the kernel modules and allow whatever is plugged into the usb slot to claim the usb slot. This is generally only useful if you get the following message from the `pcsc_scan`: "scanning present readers waiting for the first reader..."
-
+```bash
 	modprobe -r pn533 nfc
-
+```
 Now that the middleware is operational we can pivot to unlocking and interacting with our CAC. First use `opensc-tools` to query some information about your CAC; the following command will list driver information available to OpenSC and if OpenSC can interact with the middleware. **This is important and probably the largest stumbling block!**:
 ```bash
     opensc-tool -l
