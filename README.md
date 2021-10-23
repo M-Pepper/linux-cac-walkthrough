@@ -12,6 +12,7 @@ Notes on using a CAC/PIV for PopOS!
     libpcsclite1
     pcscd
     vsmartcard-vpcd
+    libnss3-tools
 
 
 ### Software
@@ -32,7 +33,7 @@ The following command will get you up and running as far as dependencies go:
 ```bash
     sudo apt remove cackey coolkey libckyapplet1 libckyapplet1-dev -y && sudo apt purge -y 
 
-    sudo apt update -y && sudo apt upgrade -y && sudo apt install pcsc-tools libccid libpcsc-perl libpcsclite1 pcscd opensc opensc-pkcs11 vsmartcard-vpcd -y
+    sudo apt update -y && sudo apt upgrade -y && sudo apt install pcsc-tools libccid libpcsc-perl libpcsclite1 pcscd opensc opensc-pkcs11 vsmartcard-vpcd libnss3-tools -y
 ```
 ### Checks
 
