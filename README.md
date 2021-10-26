@@ -184,7 +184,7 @@ https://public.cyber.mil/pki-pke/pkipke-document-library/
 
 This command will obviously have to be updated as Cyber.mil continuously releases new bundles and moves them around on their website:
 ```bash
-wget https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip && unzip certificates+pkcs7_DoD.zip
+wget https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip && unzip certificates_pkcs7_DoD.zip
 ```
 
 #### FireFox
