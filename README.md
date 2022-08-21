@@ -195,6 +195,7 @@ There are two ways to register the security device with Firefox, a manual and au
 ```bash
 pkcs11-register
 ```
+Or the manual way:
 Navigate to Edit -> Preference -> Advanced -> Certificates -> Security Devices. You should see the following entry under modules and devices:
 
 ![pic](firefox-security.png)
