@@ -1,8 +1,16 @@
 # linux-cac-walkthrough
 Notes on using a CAC/PIV for PopOS!
 
+# Table of Contents
 
-## Software Dependencies:
+- [Dependencies](#dependencies)
+- [Browser Configuration](#browser-configuration)
+  - [FireFox](#firefox)
+  - [Edge/Chromium/Chrome](#edgechromiumchrome)
+- [VMWare-Horizon](#vmware-horizon)
+
+
+# Dependencies
 
     pcsc-tools
     libccid
@@ -14,8 +22,7 @@ Notes on using a CAC/PIV for PopOS!
     opensc
     opensc-pkcs11
 
-
-### Rundown
+## Rundown
 
 Some important setup information. Most guides will direct your towards CoolKey or CACKey as the pkcs11 management software to interact with your CAC. CoolKey used to be very effective but it cannot interact with the PIV certificates on your CAC; CACKey has the distinguishment of only being available to download after already being authenticated via CAC… also it’s just not very good. This leaves us with OpenSC. OpenSC is the bee’s knees, it can interact with PIV certificates, is very actively updated, RedHat provides upstream commits, and is very fast! CACKey and CoolKey must be completely uninstalled.
 
@@ -27,7 +34,7 @@ sudo apt remove cackey coolkey libckyapplet1 libckyapplet1-dev -y && sudo apt pu
 
 sudo apt update -y && sudo apt upgrade -y && sudo apt install pcsc-tools libccid libpcsc-perl libpcsclite1 pcscd opensc opensc-pkcs11 vsmartcard-vpcd libnss3-tools -y
 ```
-### Checks
+## Checks
 
 Now that all your dependencies are installed it’s time to start checking if things are operating how they should. The first step is to ensure your middleware actually sees your CAC; this is done via pcscd and it’s associated tools.
 
@@ -172,7 +179,7 @@ Query your CAC with opensc-tools again and see if it detects the drivers.
 
 Now we can start working on the certificates and preparing the browers to use your CAC.
 
-## Browser Configuration
+# Browser Configuration
 
 I will show instructions on how to prepare both FireFox and Microsoft Edge (Chromium) on PopOS!
 
@@ -185,9 +192,9 @@ This command will obviously have to be updated as Cyber.mil continuously release
 wget https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip && unzip certificates_pkcs7_DoD.zip
 ```
 
-#### FireFox
+# FireFox
 
-##### Load Security Device
+## Load Security Device
 
 Load the proper security device on FireFox:
 
@@ -209,7 +216,7 @@ If you need to manually add the security device do the following:
     You should see the following entry under modules and devices: and click "Load" to load a module using 
     `/usr/lib/x86_64-linux-gnu/pkcs11/onepin-opensc-pkcs11.so` or `/usr/lib/onepin-opensc-pkcs11.so`.
 
-##### Import DoD Certificates
+## Import DoD Certificates
 
 Install the certificates from the mentioned zip-file in this order, by going to Edit -> Preference -> Advanced -> Certificates -> View Certificates -> Authorities -> Import (make sure to at-least check the box for "Trust this CA to identify websites"):
 
@@ -228,9 +235,9 @@ Note: As of the 5.7 version of the certificate zip
 
 Firefox is now ready to use.
 
-#### Edge/Chromium/Chrome
+# Edge/Chromium/Chrome
 
-##### Add the CAC Module to NSS DB
+## Add the CAC Module to NSS DB
 
 Query nssdb to see if the OpenSC framework was registered in the NSS DB by using `pkcs11-register`
 ```bash
@@ -263,7 +270,7 @@ You must not have any other residual nssdb entries from cackey, coolkey, or old 
 ```bash
 modutil -dbdir sql:$HOME/.pki/nssdb/ -delete "Name of Module (Probably CAC Module since everyone follows the milcac tutorial)"
 ```
-##### Import DoD Certificates
+## Import DoD Certificates
 
 Now you must add the DoD Certificates to nssdb. Navigate to the location of the unziped DoD Certificates and install via the following command:
 ```bash
@@ -277,4 +284,60 @@ Or the manual way:
 
 Verify the authority is in Chrome under Settings -> Show Advanced Settings -> Manage Certificates -> Authorities then expand "org-U.S. Government" and you should see a number of "DoD" certificates listed.
 
+# VMWare-Horizon
+
+Go to https://www.vmware.com/go/viewclients and download the latest 64 bit bundle
+
+Make the installer executable and execute it with sudo permissions:
+
+```
+chmod +x VMware-Horizon-Client-2209-8.7.0-20616018.x64.bundle
+sudo ./VMware-Horizon-Client-2209-8.7.0-20616018.x64.bundle
+```
+
+## Setup CAC login
+
+Create a symlink to opensc-pkcs11.so
+
+```
+sudo ln -s /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib/vmware/view/pkcs11/libopenscpkcs11.so
+```
+
+## Import DoD Certificates
+
+To not recieve an untrusted error when connecting to the horizon server, we need to add the dod certificates to the system certificate store.
+
+Move to the directory you extracted the DoD certs to.
+
+```
+cd Certificates_PKCS7_v5.9_DoD
+```
+
+Use openssl to convert the pkcs bundle to a single pem file
+
+```
+openssl pkcs7 -print_certs -in Certificates_PKCS7_v5.9_DoD.pem.p7b -out dod_bundle.pem
+```
+Use awk to split the pem file into individual crt files
+
+```
+awk '
+  split_after == 1 {n++;split_after=0}
+  /-----END CERTIFICATE-----/ {split_after=1}
+  {print > "cert" n ".crt"}' < dod_bundle.pem
+```
+
+Create a dod subfolder in /usr/local/share/ca-certificates and copy the certificate files to it
+
+```
+sudo mkdir -p /usr/local/share/ca-certificates/dod/
+sudo cp *.crt /usr/local/share/ca-certificates/dod/
+```
+Last, update the certificate store
+
+```
+sudo update-ca-certificates
+```
+
+## Setup Complete
 You are now fully CAC enabled on Linux; I find Linux to be a more stable environment for CAC than Windows!
